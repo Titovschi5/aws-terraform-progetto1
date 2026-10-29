@@ -1,0 +1,10 @@
+# Ignora la cartella nascosta scaricata da Terraform
+.terraform/
+
+# Ignora i file di stato (contengono la mappa della tua infrastruttura e dati sensibili)
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Ignora il file con le tue password reali
+*.tfvars

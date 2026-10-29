@@ -1,0 +1,41 @@
+#!/bin/bash
+# 1. Effettua l'update dei pacchetti
+dnf update -y
+
+# 2. Installa il web server Apache e il client del database (MySQL/MariaDB)
+dnf install -y httpd mariadb105
+
+# Avvia e abilita Apache per l'avvio automatico
+systemctl start httpd
+systemctl enable httpd
+
+# 3. Interroga IMDSv2 per recuperare l'IP Privato della EC2 (con token di sicurezza)
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+PRIVATE_IP=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/local-ipv4)
+
+# 4. Genera una pagina index.html
+cat <<EOF > /var/www/html/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio AWS Terraform</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f9; }
+        .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #333; }
+        .success { color: #28a745; font-weight: bold; font-size: 1.2em; }
+        .ip { color: #007bff; font-weight: bold; }
+        .db { color: #dc3545; font-family: monospace; font-size: 1.1em; background: #ffe9e9; padding: 5px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Progetto AWS Terraform 🚀</h1>
+        <p class="success">Infrastruttura creata con successo!</p>
+        <hr>
+        <p>Questa risposta proviene dall'istanza EC2 con IP Privato: <span class="ip">$PRIVATE_IP</span></p>
+        <p>L'Endpoint di connessione del Database RDS isolato e':<br><br> <span class="db">${db_endpoint}</span></p>
+    </div>
+</body>
+</html>
+EOF
