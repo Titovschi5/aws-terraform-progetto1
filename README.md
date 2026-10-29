@@ -80,5 +80,5 @@ terraform destroy
 ## Autore
 
 **Tito Catalano**  
-Aspirante Cloud / DevOps Engineer | AWS Certified Cloud Practitioner
+Junior Cloud & DevOps Engineer | AWS Certified Cloud Practitioner
 * [Profilo LinkedIn](https://www.linkedin.com/in/titocatalano/)
